@@ -15,7 +15,7 @@ export const resources = [
     ],
     links: [
       { label: 'Britannica entry', url: 'https://www.britannica.com/biography/Vladimir-Jabotinsky' },
-      { label: 'Jewish Virtual Library profile', url: 'https://www.jewishvirtuallibrary.org/vladimir-ze-ev-jabotinsky' }
+      { label: 'Jabotinsky Institute', url: 'https://en.jabotinsky.org/' }
     ]
   },
   {
@@ -32,7 +32,8 @@ export const resources = [
       'Scholars debate whether it was a temporary doctrine of strength before negotiation or a broader worldview.'
     ],
     links: [
-      { label: 'English text', url: 'https://en.jabotinsky.org/media/9747/the-iron-wall.pdf' }
+      { label: 'The Iron Wall text', url: 'https://en.jabotinsky.org/media/9747/the-iron-wall.pdf' },
+      { label: 'Jabotinsky Institute archive', url: 'https://en.jabotinsky.org/archive/' }
     ]
   },
   {
@@ -50,7 +51,7 @@ export const resources = [
     ],
     links: [
       { label: 'Encyclopedia.com overview', url: 'https://www.encyclopedia.com/religion/encyclopedias-almanacs-transcripts-and-maps/betar' },
-      { label: 'Betar movement site', url: 'https://www.betar.org/' }
+      { label: 'Betar world movement', url: 'https://www.betar.org/' }
     ]
   },
   {
@@ -67,7 +68,8 @@ export const resources = [
       'Trumpeldor’s image became part of Betar educational culture and mythology.'
     ],
     links: [
-      { label: 'Jewish Virtual Library on Trumpeldor', url: 'https://www.jewishvirtuallibrary.org/joseph-trumpeldor' }
+      { label: 'Jewish Virtual Library home', url: 'https://www.jewishvirtuallibrary.org/' },
+      { label: 'Internet Archive search for Trumpeldor', url: 'https://archive.org/search?query=Joseph%20Trumpeldor' }
     ]
   },
   {
@@ -84,7 +86,8 @@ export const resources = [
       'His legacy is contested: admired as a liberal nationalist by supporters, criticized as hardline by opponents.'
     ],
     links: [
-      { label: 'Jewish Virtual Library on Revisionist Zionism', url: 'https://www.jewishvirtuallibrary.org/revisionist-zionism' }
+      { label: 'Jabotinsky Institute timeline', url: 'https://en.jabotinsky.org/' },
+      { label: 'Internet Archive search for Revisionist Zionism', url: 'https://archive.org/search?query=Revisionist%20Zionism' }
     ]
   },
   {
@@ -101,7 +104,8 @@ export const resources = [
       'The tension between his liberal and militant aspects is one of the main themes in modern scholarship.'
     ],
     links: [
-      { label: 'Jabotinsky Institute', url: 'https://en.jabotinsky.org/' }
+      { label: 'Jabotinsky Institute', url: 'https://en.jabotinsky.org/' },
+      { label: 'Archive search', url: 'https://archive.org/search?query=Jabotinsky%20liberalism' }
     ]
   },
   {
@@ -118,7 +122,8 @@ export const resources = [
       'For many participants, Betar was both a social world and a political training ground.'
     ],
     links: [
-      { label: 'YIVO encyclopedia search', url: 'https://yivoencyclopedia.org/' }
+      { label: 'Encyclopedia.com Betar article', url: 'https://www.encyclopedia.com/religion/encyclopedias-almanacs-transcripts-and-maps/betar' },
+      { label: 'Internet Archive search for Betar Poland', url: 'https://archive.org/search?query=Betar%20Poland' }
     ]
   },
   {
@@ -152,7 +157,7 @@ export const spokenSections = [
     id: 'iron-wall-excerpt',
     title: 'The Iron Wall, adapted English reading excerpt',
     text:
-      'Every indigenous people will resist alien settlers as long as they see any hope of ridding themselves of the danger of foreign settlement. That is what the Arabs in the Land of Israel are doing, and what they will continue to do so long as there remains a spark of hope that they can prevent the transformation of this land into a Jewish homeland. Therefore, colonization can proceed and develop only under the protection of a force independent of the local population, an iron wall which the native population cannot break through. In this sense, our policy toward the Arabs must be one of strength before agreement, because only after despair of defeating us will serious negotiation become possible.'
+      'Every native people resists colonists so long as it still sees a hope of preventing settlement. That, Jabotinsky argued, is the normal political instinct of a people defending what it regards as its homeland. Therefore, Zionist development could proceed only behind an iron wall of security, a force not dependent on the approval of the local population. Only when that wall could not be breached, he believed, would practical negotiation and mutual guarantees become possible.'
   },
   {
     id: 'betar-reading',

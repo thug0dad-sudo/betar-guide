@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import './App.css'
 import { resources, spokenSections } from './data'
 
@@ -6,46 +6,9 @@ function normalize(text) {
   return text.toLowerCase()
 }
 
-function pickVoice(voices, preset) {
-  const presets = {
-    balanced: ['english', 'en-', 'daniel', 'alex', 'fred', 'male', 'uk', 'google us english'],
-    speech: ['english', 'en-', 'uk', 'male', 'daniel', 'alex', 'narrator'],
-  }
-
-  const preferredMatches = presets[preset] || presets.balanced
-
-  for (const token of preferredMatches) {
-    const match = voices.find((voice) => {
-      const haystack = `${voice.name} ${voice.lang}`.toLowerCase()
-      return haystack.includes(token)
-    })
-    if (match) return match
-  }
-
-  return voices[0] || null
-}
-
 function App() {
   const [query, setQuery] = useState('')
   const [activeType, setActiveType] = useState('All')
-  const [voices, setVoices] = useState([])
-  const [currentSection, setCurrentSection] = useState('')
-  const [isSpeaking, setIsSpeaking] = useState(false)
-  const [voicePreset, setVoicePreset] = useState('speech')
-  const synthRef = useRef(typeof window !== 'undefined' ? window.speechSynthesis : null)
-
-  useEffect(() => {
-    if (!synthRef.current) return undefined
-
-    const loadVoices = () => setVoices(synthRef.current.getVoices())
-    loadVoices()
-    window.speechSynthesis.onvoiceschanged = loadVoices
-
-    return () => {
-      window.speechSynthesis.onvoiceschanged = null
-      window.speechSynthesis.cancel()
-    }
-  }, [])
 
   const types = ['All', ...new Set(resources.map((item) => item.type))]
 
@@ -71,39 +34,6 @@ function App() {
       return haystack.includes(q)
     })
   }, [query, activeType])
-
-  const selectedVoice = useMemo(() => pickVoice(voices, voicePreset), [voices, voicePreset])
-
-  const speakSection = (section) => {
-    if (!synthRef.current) return
-
-    synthRef.current.cancel()
-    const utterance = new SpeechSynthesisUtterance(section.text)
-    if (selectedVoice) utterance.voice = selectedVoice
-    utterance.lang = selectedVoice?.lang || 'en-US'
-    utterance.rate = voicePreset === 'speech' ? 0.78 : 0.84
-    utterance.pitch = voicePreset === 'speech' ? 0.66 : 0.72
-    utterance.volume = 1
-    utterance.onstart = () => {
-      setCurrentSection(section.id)
-      setIsSpeaking(true)
-    }
-    utterance.onend = () => {
-      setCurrentSection('')
-      setIsSpeaking(false)
-    }
-    utterance.onerror = () => {
-      setCurrentSection('')
-      setIsSpeaking(false)
-    }
-    synthRef.current.speak(utterance)
-  }
-
-  const stopSpeaking = () => {
-    synthRef.current?.cancel()
-    setCurrentSection('')
-    setIsSpeaking(false)
-  }
 
   return (
     <div className="app-shell">
@@ -141,36 +71,16 @@ function App() {
       <main>
         <section className="voice-panel">
           <div>
-            <p className="eyebrow">Live audio reading</p>
-            <h2>Historically inspired narration mode</h2>
+            <p className="eyebrow">Audio status</p>
+            <h2>Voice upgrade path</h2>
             <p>
-              Refined using cues from surviving recordings, with slower pacing and a more
-              formal public-speaking cadence. This is presented as an interpretation, not
-              as Jabotinsky’s literal voice.
+              The browser voice has been removed because it sounded too generic. The next
+              proper step is a custom hosted audio voice trained or tuned from archival
+              recordings you approve for use.
             </p>
             <p className="voice-meta">
-              Voice: {selectedVoice ? `${selectedVoice.name} (${selectedVoice.lang})` : 'Browser default'}
+              Current state: prepared spoken sections, pending better external voice engine
             </p>
-          </div>
-
-          <div className="voice-actions">
-            <div className="filter-row compact">
-              <button
-                className={voicePreset === 'speech' ? 'chip active' : 'chip'}
-                onClick={() => setVoicePreset('speech')}
-              >
-                Speech mode
-              </button>
-              <button
-                className={voicePreset === 'balanced' ? 'chip active' : 'chip'}
-                onClick={() => setVoicePreset('balanced')}
-              >
-                Balanced mode
-              </button>
-            </div>
-            <button className="stop-button" onClick={stopSpeaking} disabled={!isSpeaking}>
-              Stop audio
-            </button>
           </div>
         </section>
 
@@ -179,12 +89,6 @@ function App() {
             <article key={section.id} className="spoken-card">
               <h3>{section.title}</h3>
               <p>{section.text}</p>
-              <button
-                className={currentSection === section.id ? 'speak-button active' : 'speak-button'}
-                onClick={() => speakSection(section)}
-              >
-                {currentSection === section.id ? 'Playing…' : 'Read aloud'}
-              </button>
             </article>
           ))}
         </section>
