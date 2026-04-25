@@ -1,14 +1,54 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
-import { resources } from './data'
+import { resources, spokenSections } from './data'
 
 function normalize(text) {
   return text.toLowerCase()
 }
 
+function pickVoice(voices) {
+  const preferredMatches = [
+    'english',
+    'en-',
+    'daniel',
+    'alex',
+    'fred',
+    'male',
+    'uk',
+    'google us english',
+  ]
+
+  for (const token of preferredMatches) {
+    const match = voices.find((voice) => {
+      const haystack = `${voice.name} ${voice.lang}`.toLowerCase()
+      return haystack.includes(token)
+    })
+    if (match) return match
+  }
+
+  return voices[0] || null
+}
+
 function App() {
   const [query, setQuery] = useState('')
   const [activeType, setActiveType] = useState('All')
+  const [voices, setVoices] = useState([])
+  const [currentSection, setCurrentSection] = useState('')
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const synthRef = useRef(typeof window !== 'undefined' ? window.speechSynthesis : null)
+
+  useEffect(() => {
+    if (!synthRef.current) return undefined
+
+    const loadVoices = () => setVoices(synthRef.current.getVoices())
+    loadVoices()
+    window.speechSynthesis.onvoiceschanged = loadVoices
+
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null
+      window.speechSynthesis.cancel()
+    }
+  }, [])
 
   const types = ['All', ...new Set(resources.map((item) => item.type))]
 
@@ -34,6 +74,39 @@ function App() {
       return haystack.includes(q)
     })
   }, [query, activeType])
+
+  const selectedVoice = useMemo(() => pickVoice(voices), [voices])
+
+  const speakSection = (section) => {
+    if (!synthRef.current) return
+
+    synthRef.current.cancel()
+    const utterance = new SpeechSynthesisUtterance(section.text)
+    if (selectedVoice) utterance.voice = selectedVoice
+    utterance.lang = selectedVoice?.lang || 'en-US'
+    utterance.rate = 0.84
+    utterance.pitch = 0.72
+    utterance.volume = 1
+    utterance.onstart = () => {
+      setCurrentSection(section.id)
+      setIsSpeaking(true)
+    }
+    utterance.onend = () => {
+      setCurrentSection('')
+      setIsSpeaking(false)
+    }
+    utterance.onerror = () => {
+      setCurrentSection('')
+      setIsSpeaking(false)
+    }
+    synthRef.current.speak(utterance)
+  }
+
+  const stopSpeaking = () => {
+    synthRef.current?.cancel()
+    setCurrentSection('')
+    setIsSpeaking(false)
+  }
 
   return (
     <div className="app-shell">
@@ -69,6 +142,39 @@ function App() {
       </header>
 
       <main>
+        <section className="voice-panel">
+          <div>
+            <p className="eyebrow">Live audio reading</p>
+            <h2>Historically inspired narration mode</h2>
+            <p>
+              Tuned toward a deliberate, formal cadence based on surviving recordings and
+              browser speech voices. This is presented as an interpretation, not as
+              Jabotinsky’s literal voice.
+            </p>
+            <p className="voice-meta">
+              Voice: {selectedVoice ? `${selectedVoice.name} (${selectedVoice.lang})` : 'Browser default'}
+            </p>
+          </div>
+          <button className="stop-button" onClick={stopSpeaking} disabled={!isSpeaking}>
+            Stop audio
+          </button>
+        </section>
+
+        <section className="spoken-grid">
+          {spokenSections.map((section) => (
+            <article key={section.id} className="spoken-card">
+              <h3>{section.title}</h3>
+              <p>{section.text}</p>
+              <button
+                className={currentSection === section.id ? 'speak-button active' : 'speak-button'}
+                onClick={() => speakSection(section)}
+              >
+                {currentSection === section.id ? 'Playing…' : 'Read aloud'}
+              </button>
+            </article>
+          ))}
+        </section>
+
         <section className="results-bar">
           <strong>{filtered.length}</strong> resource{filtered.length === 1 ? '' : 's'} found
         </section>

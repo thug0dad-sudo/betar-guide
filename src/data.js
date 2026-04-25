@@ -140,3 +140,30 @@ export const resources = [
     ]
   }
 ]
+
+export const spokenSections = [
+  {
+    id: 'voice-note',
+    title: 'Voice mode note',
+    text:
+      'This reading mode is an interpretive historical style inspired by surviving public recordings associated with Zeev Jabotinsky. It does not claim to reproduce his exact real voice. The goal is to evoke a formal, deliberate, early twentieth century oratorical style for study and reflection.'
+  },
+  {
+    id: 'iron-wall-excerpt',
+    title: 'The Iron Wall, adapted English reading excerpt',
+    text:
+      'Every indigenous people will resist alien settlers as long as they see any hope of ridding themselves of the danger of foreign settlement. That is what the Arabs in the Land of Israel are doing, and what they will continue to do so long as there remains a spark of hope that they can prevent the transformation of this land into a Jewish homeland. Therefore, colonization can proceed and develop only under the protection of a force independent of the local population, an iron wall which the native population cannot break through. In this sense, our policy toward the Arabs must be one of strength before agreement, because only after despair of defeating us will serious negotiation become possible.'
+  },
+  {
+    id: 'betar-reading',
+    title: 'Betar mission reading',
+    text:
+      'Betar sought to cultivate dignity, discipline, courage, and responsibility in Jewish youth. It joined national education to physical bearing, Hebrew culture to readiness for action, and historical memory to the demand that a generation prepare itself to build and defend a state. In that sense, Betar was not merely a youth club, but a training ground in identity and resolve.'
+  },
+  {
+    id: 'biography-reading',
+    title: 'Biographical introduction',
+    text:
+      'Zeev Jabotinsky was a writer, organizer, and political thinker whose influence reached far beyond his own lifetime. He combined journalism with activism, literary skill with strategic clarity, and he left behind both a movement and a vocabulary that continued to shape Jewish political life after his death.'
+  }
+]
