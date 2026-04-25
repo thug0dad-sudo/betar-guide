@@ -6,17 +6,13 @@ function normalize(text) {
   return text.toLowerCase()
 }
 
-function pickVoice(voices) {
-  const preferredMatches = [
-    'english',
-    'en-',
-    'daniel',
-    'alex',
-    'fred',
-    'male',
-    'uk',
-    'google us english',
-  ]
+function pickVoice(voices, preset) {
+  const presets = {
+    balanced: ['english', 'en-', 'daniel', 'alex', 'fred', 'male', 'uk', 'google us english'],
+    speech: ['english', 'en-', 'uk', 'male', 'daniel', 'alex', 'narrator'],
+  }
+
+  const preferredMatches = presets[preset] || presets.balanced
 
   for (const token of preferredMatches) {
     const match = voices.find((voice) => {
@@ -35,6 +31,7 @@ function App() {
   const [voices, setVoices] = useState([])
   const [currentSection, setCurrentSection] = useState('')
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [voicePreset, setVoicePreset] = useState('speech')
   const synthRef = useRef(typeof window !== 'undefined' ? window.speechSynthesis : null)
 
   useEffect(() => {
@@ -75,7 +72,7 @@ function App() {
     })
   }, [query, activeType])
 
-  const selectedVoice = useMemo(() => pickVoice(voices), [voices])
+  const selectedVoice = useMemo(() => pickVoice(voices, voicePreset), [voices, voicePreset])
 
   const speakSection = (section) => {
     if (!synthRef.current) return
@@ -84,8 +81,8 @@ function App() {
     const utterance = new SpeechSynthesisUtterance(section.text)
     if (selectedVoice) utterance.voice = selectedVoice
     utterance.lang = selectedVoice?.lang || 'en-US'
-    utterance.rate = 0.84
-    utterance.pitch = 0.72
+    utterance.rate = voicePreset === 'speech' ? 0.78 : 0.84
+    utterance.pitch = voicePreset === 'speech' ? 0.66 : 0.72
     utterance.volume = 1
     utterance.onstart = () => {
       setCurrentSection(section.id)
@@ -147,17 +144,34 @@ function App() {
             <p className="eyebrow">Live audio reading</p>
             <h2>Historically inspired narration mode</h2>
             <p>
-              Tuned toward a deliberate, formal cadence based on surviving recordings and
-              browser speech voices. This is presented as an interpretation, not as
-              Jabotinsky’s literal voice.
+              Refined using cues from surviving recordings, with slower pacing and a more
+              formal public-speaking cadence. This is presented as an interpretation, not
+              as Jabotinsky’s literal voice.
             </p>
             <p className="voice-meta">
               Voice: {selectedVoice ? `${selectedVoice.name} (${selectedVoice.lang})` : 'Browser default'}
             </p>
           </div>
-          <button className="stop-button" onClick={stopSpeaking} disabled={!isSpeaking}>
-            Stop audio
-          </button>
+
+          <div className="voice-actions">
+            <div className="filter-row compact">
+              <button
+                className={voicePreset === 'speech' ? 'chip active' : 'chip'}
+                onClick={() => setVoicePreset('speech')}
+              >
+                Speech mode
+              </button>
+              <button
+                className={voicePreset === 'balanced' ? 'chip active' : 'chip'}
+                onClick={() => setVoicePreset('balanced')}
+              >
+                Balanced mode
+              </button>
+            </div>
+            <button className="stop-button" onClick={stopSpeaking} disabled={!isSpeaking}>
+              Stop audio
+            </button>
+          </div>
         </section>
 
         <section className="spoken-grid">

@@ -129,6 +129,18 @@ input[type='search'] {
   margin: 1.5rem 0 1rem;
 }
 
+.voice-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.filter-row.compact {
+  margin-top: 0;
+  justify-content: flex-end;
+}
+
 .voice-panel h2,
 .spoken-card h3,
 .card h2 {
